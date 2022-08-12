@@ -1,16 +1,17 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    core.debug(`Checking if today is a friday..`)
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const today = new Date()
+    const day = today.getDay()
 
-    core.setOutput('time', new Date().toTimeString())
+    if (day === 5) {
+      core.error(`⛔ Today is a friday! - Don not change anything!`)
+    } else {
+      core.info(`🎉 Today is not a friday! - Change something!`)
+    }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
