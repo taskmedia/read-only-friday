@@ -43,7 +43,7 @@ function run() {
             const today = new Date();
             const day = today.getDay();
             if (day === 5) {
-                core.error(`⛔ Today is a friday! - Don not change anything!`);
+                core.setFailed(`⛔ Today is a friday! - Do not change anything!`);
             }
             else {
                 core.info(`🎉 Today is not a friday! - Change something!`);
