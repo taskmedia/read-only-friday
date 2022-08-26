@@ -7,5 +7,5 @@ This action is not meant to be used in production - it is an ironic action.
 ## Usage
 
 ```yaml
-- uses: taskmedia/read-only-friday@v1.1.4
+- uses: taskmedia/read-only-friday@v1.1.5
 ```
