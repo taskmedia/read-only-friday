@@ -1,0 +1,72 @@
+name: release
+
+on:
+  release:
+    types:
+      - "published"
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+
+      - name: install node 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: download dependencies
+        shell: bash
+        run: npm install
+
+      - name: build binaries
+        shell: bash
+        run: npm run build
+
+      - name: package binaries
+        shell: bash
+        run: npm run package
+
+      - name: bump version (npm)
+        shell: bash
+        run: npm version --no-git-tag-version --new-version ${{ github.event.release.tag_name }}
+
+      - name: bump version (README)
+        shell: bash
+        run: sed -i -E "s/@(v[0-9]*\.[0-9]*\.[0-9]*)/@${{ github.event.release.tag_name }}/g" README.md
+
+      - name: commit version bump
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore(release): update version to ${{ github.event.release.tag_name }}"
+          branch: main
+          file_pattern: package.json README.md
+
+      - name: configure git
+        shell: bash
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: commit binaries
+        shell: bash
+        run: |
+          git checkout -b release/${{ github.event.release.tag_name }}
+          git add --force dist/
+          git commit -m "chore(release): add binaries ${{ github.event.release.tag_name }}"
+
+      - name: move release tag
+        shell: bash
+        run: |
+          git tag --force ${{ github.event.release.tag_name }} HEAD
+          git push --force origin ${{ github.event.release.tag_name }}
+
+      - name: update latest tag
+        shell: bash
+        run: |
+          git tag --force latest HEAD
+          git push --force origin latest
