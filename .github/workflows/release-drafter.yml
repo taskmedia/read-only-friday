@@ -44,8 +44,6 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v3
-        with:
-          ref: ${{ needs.release-drafter.outputs.tag }}
 
       - name: install node 16.x
         uses: actions/setup-node@v3
