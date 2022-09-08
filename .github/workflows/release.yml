@@ -40,6 +40,10 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v3
+        with:
+          # Using PAT because action will be triggered automatically and has no write permission
+          # see: https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
+          token: ${{ secrets.PAT }}
 
       - name: install node 16.x
         uses: actions/setup-node@v3
