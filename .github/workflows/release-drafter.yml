@@ -29,77 +29,8 @@ jobs:
         id: releasedrafter
         with:
           config-name: release-drafter.yaml
-          publish: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     outputs:
       tag: ${{ steps.releasedrafter.outputs.tag_name }}
-
-  release:
-    runs-on: ubuntu-latest
-    needs: release-drafter
-    if: github.event_name == 'push'
-
-    steps:
-      - name: checkout repository
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.PAT }}
-
-      - name: install node 16.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-
-      - name: download dependencies
-        shell: bash
-        run: npm install
-
-      - name: build binaries
-        shell: bash
-        run: npm run build
-
-      - name: package binaries
-        shell: bash
-        run: npm run package
-
-      - name: bump version (npm)
-        shell: bash
-        run: npm version --no-git-tag-version --new-version ${{ needs.release-drafter.outputs.tag }}
-
-      - name: bump version (README)
-        shell: bash
-        run: sed -i -E "s/@(v[0-9]*\.[0-9]*\.[0-9]*)/@${{ needs.release-drafter.outputs.tag }}/g" README.md
-
-      - name: commit version bump
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "chore(release): update version to ${{ needs.release-drafter.outputs.tag }}"
-          branch: main
-          file_pattern: package.json README.md
-
-      - name: configure git
-        shell: bash
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: commit binaries
-        shell: bash
-        run: |
-          git checkout -b release/${{ needs.release-drafter.outputs.tag }}
-          git add --force dist/
-          git commit -m "chore(release): add binaries ${{ needs.release-drafter.outputs.tag }}"
-
-      - name: move release tag
-        shell: bash
-        run: |
-          git tag --force ${{ needs.release-drafter.outputs.tag }} HEAD
-          git push --force origin ${{ needs.release-drafter.outputs.tag }}
-
-      - name: update latest tag
-        shell: bash
-        run: |
-          git tag --force latest HEAD
-          git push --force origin latest
