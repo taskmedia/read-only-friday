@@ -15,12 +15,35 @@ permissions:
   contents: read
 
 jobs:
+  validate-release-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check if release should be skipped
+        id: lastcommit
+        shell: bash
+        # As described in the docs the skip-checks should prevent this push-triggered action from execution.
+        # But the action still triggers - not sure why this is the case.
+        # see: https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs
+        run: |
+          if [[ ${{ toJSON(github.event.head_commit.message) }} == *"skip-checks: true"* ]]; then
+            echo "'skip-checks: true' found"
+            echo "::set-output name=skipchecks::true"
+          else
+            echo "'skip-checks: true' NOT found"
+            echo "::set-output name=skipchecks::false"
+          fi
+    outputs:
+      skipchecks: ${{ steps.lastcommit.outputs.skipchecks }}
+
   release-drafter:
     runs-on: ubuntu-latest
+    needs: validate-release-trigger
 
     permissions:
       contents: write # for release-drafter/release-drafter to create a github release
       pull-requests: write # for release-drafter/release-drafter to add label to PR
+
+    if: ${{ needs.validate-release-trigger.outputs.skipchecks == 'false' }}
 
     steps:
       # Drafts your next Release notes as Pull Requests are merged into "main"
