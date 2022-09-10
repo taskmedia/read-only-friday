@@ -1,6 +1,8 @@
 name: release
 
-concurrency: release
+concurrency:
+  group: release
+  cancel-in-progress: true
 
 on:
   push:
