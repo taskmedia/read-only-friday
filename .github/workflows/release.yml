@@ -96,7 +96,7 @@ jobs:
         run: sed -i -E "s/@(v[0-9]*\.[0-9]*\.[0-9]*)/@${{ needs.release-drafter.outputs.tag }}/g" README.md
 
       - name: commit version bump
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: |
             chore(release): update version to ${{ needs.release-drafter.outputs.tag }}
