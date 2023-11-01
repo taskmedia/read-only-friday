@@ -64,7 +64,7 @@ jobs:
 
     steps:
       - name: checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Using PAT because if the action will be triggered automatically by dependabot the GITHUB_TOKEN has no write permission
           # see: https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
