@@ -1,6 +1,6 @@
 {
   "name": "read-only-friday",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "description": "Fails if it is friday - do not change anything on friday!",
   "main": "lib/main.js",
