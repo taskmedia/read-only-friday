@@ -28,7 +28,7 @@
     "@actions/core": "^1.11.1"
   },
   "devDependencies": {
-    "@types/node": "^24.0.8",
+    "@types/node": "^24.0.10",
     "@typescript-eslint/parser": "^8.35.1",
     "@vercel/ncc": "^0.38.3",
     "eslint": "^9.30.0",
