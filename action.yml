@@ -2,5 +2,5 @@ name: 'read-only-friday'
 description: 'Fails if it is friday - do not change anything on friday!'
 author: 'taskmedia'
 runs:
-  using: 'node16'
+  using: 'node24'
   main: 'dist/index.js'
