@@ -28,8 +28,3 @@ jobs:
       - name: Run action
         uses: ./
         id: read-only-friday
-
-      - name: Print result
-        run: |
-          echo "Action completed"
-          echo "Today is: $(date +%A)"
