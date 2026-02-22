@@ -1,6 +1,6 @@
-name: "read-only-friday"
-description: "Fails if it is friday - do not change anything on friday!"
-author: "taskmedia"
+name: 'read-only-friday'
+description: 'Fails if it is friday - do not change anything on friday!'
+author: 'taskmedia'
 runs:
-  using: "node16"
-  main: "dist/index.js"
+  using: 'node16'
+  main: 'dist/index.js'

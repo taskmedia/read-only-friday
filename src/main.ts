@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 
-async function run(): Promise<void> {
+export async function run(): Promise<void> {
   try {
     core.debug(`Checking if today is a friday..`)
 
@@ -16,5 +16,3 @@ async function run(): Promise<void> {
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
-
-run()
