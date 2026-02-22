@@ -95,6 +95,10 @@ jobs:
         shell: bash
         run: sed -i -E "s/@(v[0-9]*\.[0-9]*\.[0-9]*)/@${{ needs.release-drafter.outputs.tag }}/g" README.md
 
+      - name: update package-lock
+        shell: bash
+        run: npm install --package-lock-only
+
       - name: commit version bump
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
@@ -103,7 +107,7 @@ jobs:
 
             skip-checks: true
           branch: main
-          file_pattern: package.json README.md
+          file_pattern: package.json package-lock.json README.md
 
       - name: configure git
         shell: bash
