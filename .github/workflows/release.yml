@@ -26,11 +26,11 @@ jobs:
         # see: https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs
         run: |
           if [[ ${{ toJSON(github.event.head_commit.message) }} == *"skip-checks: true"* ]]; then
-            echo "'skip-checks: true' found"
-            echo "::set-output name=skipchecks::true"
+            echo "Release should be skipped, because commit message contains skip-checks: true"
+            echo "skipchecks=true" >> $GITHUB_OUTPUT
           else
-            echo "'skip-checks: true' NOT found"
-            echo "::set-output name=skipchecks::false"
+            echo "Release should proceed"
+            echo "skipchecks=false" >> $GITHUB_OUTPUT
           fi
     outputs:
       skipchecks: ${{ steps.lastcommit.outputs.skipchecks }}
