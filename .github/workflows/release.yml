@@ -70,10 +70,10 @@ jobs:
           # see: https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
           token: ${{ secrets.PAT }}
 
-      - name: install node 16.x
+      - name: install node 25.x
         uses: actions/setup-node@v6
         with:
-          node-version: 16.x
+          node-version: 25.x
 
       - name: download dependencies
         shell: bash
@@ -81,7 +81,7 @@ jobs:
 
       - name: build binaries
         shell: bash
-        run: npm run build
+        run: npm run package
 
       - name: package binaries
         shell: bash
