@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint": "eslint .",
+    "local-action": "npx @github/local-action . src/index.ts",
     "package": "rimraf ./dist && rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "package:watch": "npm run package -- --watch",
     "test": "jest",
@@ -32,6 +33,7 @@
     "@actions/core": "^3.0.0"
   },
   "devDependencies": {
+    "@github/local-action": "^3.2.0",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.3.0",
