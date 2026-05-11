@@ -1,6 +1,6 @@
 {
   "name": "read-only-friday",
-  "version": "27.6.1",
+  "version": "27.6.4",
   "private": true,
   "type": "module",
   "description": "Fails if it is friday - do not change anything on friday!",
