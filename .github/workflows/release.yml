@@ -71,7 +71,7 @@ jobs:
           token: ${{ secrets.PAT }}
 
       - name: install node 24.x
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24.x
 
