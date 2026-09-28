@@ -46,7 +46,7 @@
     "prettier": "^3.9.9",
     "rimraf": "^6.0.1",
     "rollup": "^4.63.5",
-    "ts-jest": "^29.4.12",
+    "ts-jest": "^29.4.14",
     "typescript": "^7.0.2",
     "typescript-eslint": "^8.70.1"
   },
