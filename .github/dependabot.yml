@@ -9,3 +9,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    ignore:
+      # typescript-eslint caps support at `typescript <6.1.0`; a major bump
+      # here breaks peer dependency resolution until that's lifted.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
