@@ -70,6 +70,18 @@ jobs:
           # see: https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
           token: ${{ secrets.PAT }}
 
+      - name: sync with latest main
+        shell: bash
+        # The checkout above pins the SHA that triggered this run. Because the "release" group
+        # runs are queued (not canceled) back-to-back, origin/main may have already advanced past
+        # that SHA by the time this job actually starts (e.g. several dependabot PRs merging in
+        # quick succession). Without resetting to the current tip first, the "commit version bump"
+        # push below fails as non-fast-forward and the job dies before dist/ is ever added, leaving
+        # the already-published release pointing at a tag without binaries.
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
       - name: install node 24.x
         uses: actions/setup-node@v7
         with:
@@ -109,9 +121,18 @@ jobs:
 
       - name: commit binaries
         shell: bash
+        # The tagged commit a consumer's `uses: taskmedia/read-only-friday@<tag>` resolves to
+        # should only contain what's needed to run the action, not the full source tree. Stash
+        # the required files, then rebuild the commit as an orphan (no src/, workflows, tests,
+        # lockfiles, etc.) so the release tag stays minimal.
         run: |
-          git checkout -b release/${{ needs.release-drafter.outputs.tag }}
-          git add --force dist/
+          release_files=$(mktemp -d)
+          cp -r dist action.yml LICENSE README.md "$release_files"/
+
+          git checkout --orphan release/${{ needs.release-drafter.outputs.tag }}
+          git rm -rf --quiet .
+          cp -r "$release_files"/. .
+          git add --force dist action.yml LICENSE README.md
           git commit \
             -m "chore(release): add binaries ${{ needs.release-drafter.outputs.tag }}" \
             -m "skip-checks: true"
