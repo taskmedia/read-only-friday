@@ -70,6 +70,18 @@ jobs:
           # see: https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
           token: ${{ secrets.PAT }}
 
+      - name: sync with latest main
+        shell: bash
+        # The checkout above pins the SHA that triggered this run. Because the "release" group
+        # runs are queued (not canceled) back-to-back, origin/main may have already advanced past
+        # that SHA by the time this job actually starts (e.g. several dependabot PRs merging in
+        # quick succession). Without resetting to the current tip first, the "commit version bump"
+        # push below fails as non-fast-forward and the job dies before dist/ is ever added, leaving
+        # the already-published release pointing at a tag without binaries.
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
       - name: install node 24.x
         uses: actions/setup-node@v7
         with:
